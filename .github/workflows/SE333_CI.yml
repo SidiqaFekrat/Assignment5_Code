@@ -19,16 +19,35 @@ jobs:
           architecture: x64
 
       - name: Install Linter
-        ##TODO
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y maven
+
 
       - name: Run Checkstyle
-        ##TODO
+        run: |
+          mvn clean validate \
+            -Dcheckstyle.consoleOutput=true \
+            -Dcheckstyle.failOnViolation=false
 
       - name: Upload Checkstyle Result
-        ##TODO
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+            name: checkstyle-report
+            path: target/checkstyle-result.xml
 
       - name: Run Maven Test
-        ##TODO
+        run: mvn clean test
 
       - name: Jacoco Report
-        ##TODO
+        run: mvn jacoco:report
+        if: always()
+
+      - name: Upload Coverage Report
+
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+            name: jacoco-report
+            path: target/site/jacoco/
